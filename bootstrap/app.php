@@ -41,6 +41,7 @@ return (new ApplicationBuilder($app))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->trustProxies(at: '*');
         
         // === LOGIKA REDIRECT USER YANG SUDAH LOGIN ===
         $middleware->redirectUsersTo(function (Request $request) {
