@@ -82,6 +82,11 @@ $defaults = [
     'LOG_CHANNEL' => 'stderr',
     'QUEUE_CONNECTION' => 'sync',
     'AUTH_GUARD' => 'web',
+    'APP_MAINTENANCE_DRIVER' => 'file',
+    'APP_MAINTENANCE_STORE' => 'array',
+    'MAIL_MAILER' => 'log',
+    'BROADCAST_CONNECTION' => 'log',
+    'FILESYSTEM_DISK' => 'local',
 ];
 
 foreach ($defaults as $k => $def) {
