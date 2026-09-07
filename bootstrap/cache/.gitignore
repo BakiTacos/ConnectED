@@ -1,5 +1,2 @@
-# Allow pre-compiled package manifest for serverless deployment
-*.php
-!packages.php
-!services.php
+*
 !.gitignore
