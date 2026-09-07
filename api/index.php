@@ -1,10 +1,14 @@
 <?php
 
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
+
 // 1. Static Asset Handler for PHP built-in server on Vercel
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH));
 $publicFile = __DIR__ . '/../public' . $uri;
 
-if ($uri !== '/' && is_file($publicFile)) {
+if ($uri !== '/' && !empty($uri) && is_file($publicFile)) {
     $mimeTypes = [
         'css'   => 'text/css',
         'js'    => 'application/javascript',
@@ -21,7 +25,7 @@ if ($uri !== '/' && is_file($publicFile)) {
         'json'  => 'application/json',
     ];
     $ext = strtolower(pathinfo($publicFile, PATHINFO_EXTENSION));
-    $mime = $mimeTypes[$ext] ?? mime_content_type($publicFile) ?: 'application/octet-stream';
+    $mime = $mimeTypes[$ext] ?? (function_exists('mime_content_type') ? @mime_content_type($publicFile) : 'application/octet-stream');
 
     header("Content-Type: {$mime}");
     header("Content-Length: " . filesize($publicFile));
@@ -64,6 +68,8 @@ if (file_exists($sourceDb) && (!file_exists($targetDb) || filesize($targetDb) ==
 
 // 4. Set environment variables for serverless runtime
 $envVars = [
+    'APP_ENV' => 'production',
+    'APP_DEBUG' => 'true',
     'APP_KEY' => getenv('APP_KEY') ?: ($_ENV['APP_KEY'] ?? 'base64:4dE1oZ2bUe58kMvF9Gv1P2m4x5y6z7A8b9c0d1e2f3g='),
     'APP_STORAGE' => $tmpStorage,
     'VIEW_COMPILED_PATH' => $tmpStorage . '/framework/views',
@@ -74,9 +80,6 @@ $envVars = [
     'LOG_CHANNEL' => 'stderr',
     'APP_SERVICES_CACHE' => $tmpStorage . '/bootstrap/cache/services.php',
     'APP_PACKAGES_CACHE' => $tmpStorage . '/bootstrap/cache/packages.php',
-    'APP_CONFIG_CACHE' => $tmpStorage . '/bootstrap/cache/config.php',
-    'APP_ROUTES_CACHE' => $tmpStorage . '/bootstrap/cache/routes.php',
-    'APP_EVENTS_CACHE' => $tmpStorage . '/bootstrap/cache/events.php',
 ];
 
 foreach ($envVars as $key => $val) {
@@ -89,9 +92,10 @@ foreach ($envVars as $key => $val) {
 try {
     require __DIR__ . '/../public/index.php';
 } catch (\Throwable $e) {
-    error_log("ConnectED Serverless Error: " . $e->getMessage() . "\n" . $e->getTraceAsString());
+    error_log("ConnectED Serverless Exception: " . $e->getMessage() . "\n" . $e->getTraceAsString());
     http_response_code(500);
     echo "<h1>500 Server Error</h1>";
-    echo "<p><strong>Error:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
-    echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
+    echo "<p><strong>Message:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p><strong>File:</strong> " . htmlspecialchars($e->getFile()) . " (Line " . $e->getLine() . ")</p>";
+    echo "<pre style='background:#f1f5f9;padding:15px;border-radius:8px;'>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
 }
