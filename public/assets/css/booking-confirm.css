@@ -1,0 +1,179 @@
+asdsad/* Wrapper Utama agar posisi di tengah */
+.confirm-wrapper {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background-color: #f8f9fa; /* Sesuaikan dengan background body */
+}
+
+/* Kartu Putih Utama */
+.success-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    border-radius: 24px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f0f0f0;
+}
+
+/* Ikon Centang Hijau */
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background-color: #e8f5e9; /* Hijau background sangat muda */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    color: #2e7d32; /* Hijau ikon */
+}
+
+.success-icon svg {
+    width: 40px;
+    height: 40px;
+    stroke-width: 3px;
+}
+
+/* Teks Judul & Deskripsi */
+.success-title {
+    font-family: 'Poppins', sans-serif;
+    color: #333333;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.success-desc {
+    color: #666666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Bagian Tiket (Kotak Putus-putus) */
+.ticket-detail {
+    background-color: #ffffff;
+    border: 2px dashed #d1d5db; /* Garis putus-putus abu */
+    border-radius: 16px;
+    padding: 20px;
+    text-align: left;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+/* Header Tiket (Foto & Nama Psikolog) */
+.ticket-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.mini-avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.ticket-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.ticket-role {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #888;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.ticket-name {
+    font-size: 0.95rem;
+    color: #2f7dbd; /* Warna Biru Utama */
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Garis Pembatas di dalam Tiket */
+.ticket-divider {
+    border: 0;
+    border-top: 1px dashed #e5e7eb;
+    margin: 15px 0;
+}
+
+/* Grid Data (Metode, Jenis, Tanggal, Waktu) */
+.ticket-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.grid-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-item .lbl {
+    font-size: 0.75rem;
+    color: #9ca3af; /* Abu muda */
+    margin-bottom: 4px;
+}
+
+.grid-item .val {
+    font-size: 0.9rem;
+    color: #374151; /* Abu gelap */
+    font-weight: 600;
+}
+
+/* Tombol & Link di Bawah */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn-link-primary {
+    color: #4f46e5; /* Biru/Ungu link */
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.btn-link-primary:hover {
+    text-decoration: underline;
+    color: #4338ca;
+}
+
+.btn-link-secondary {
+    color: #111827;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.btn-link-secondary:hover {
+    color: #000;
+    text-decoration: underline;
+}
+
+/* Responsif untuk Mobile */
+@media (max-width: 480px) {
+    .success-card {
+        padding: 30px 20px;
+    }
+    
+    .ticket-grid {
+        grid-template-columns: 1fr; /* Stack ke bawah di HP kecil */
+        gap: 15px;
+    }
+}

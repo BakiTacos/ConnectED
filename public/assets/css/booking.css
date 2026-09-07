@@ -1,0 +1,366 @@
+/* assets/css/booking.css */
+
+/* --- LAYOUT UTAMA --- */
+.booking-wrapper {
+    max-width: 1200px;
+    margin: 120px auto 60px;
+    padding: 0 20px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    /* PENTING: Mencegah overflow horizontal pada level wrapper */
+    overflow: hidden; 
+}
+
+/* --- SIDEBAR PROFIL (KIRI) --- */
+.booking-sidebar {
+    flex: 0 0 270px; 
+    position: sticky;
+    top: 100px;
+    z-index: 10;
+}
+
+.sidebar-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-top {
+    padding: 15px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+}
+
+.sidebar-avatar {
+    width: 100%;
+    height: 240px; 
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.sidebar-bottom {
+    background: #3b5d84;
+    padding: 15px;
+    color: white;
+    text-align: center;
+}
+
+.sidebar-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 2px; }
+.sidebar-nim { font-size: 0.85rem; opacity: 0.9; margin-bottom: 5px; letter-spacing: 0.5px; }
+.sidebar-email { font-size: 0.75rem; opacity: 0.8; word-break: break-all; }
+
+
+/* --- KONTEN JADWAL (KANAN) --- */
+.booking-content {
+    flex: 1;
+    /* FIX CRITICAL: min-width: 0 mencegah flex child memaksa parent melebar */
+    /* Ini yang membuat scrollbar muncul HANYA di tab, bukan di seluruh body */
+    min-width: 0; 
+}
+
+/* HEADER JADWAL (FULL WIDTH BOX) */
+.schedule-header-wrapper {
+    width: 100%;
+    margin-bottom: 25px;
+    /* Hapus text-align center agar bisa full width */
+}
+
+/* Hapus garis tipis karena sekarang pakai Box Full */
+.schedule-header-wrapper::before {
+    display: none;
+}
+
+.schedule-header {
+    display: block; /* Ubah dari inline-block ke block */
+    width: 100%;    /* Lebar Penuh */
+    background: linear-gradient(135deg, #3b5d84 0%, #2c4a6b 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 15px; /* Radius disamakan dengan kartu psikolog (bukan 50px) */
+    font-weight: 600;
+    font-size: 1.2rem;
+    box-shadow: 0 5px 15px rgba(59, 93, 132, 0.2);
+    text-align: center;
+    box-sizing: border-box; /* Pastikan padding tidak menambah lebar total */
+}
+
+
+/* --- TAB TANGGAL (SCROLLABLE ONLY HERE) --- */
+.date-tabs {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 30px;
+    width: 100%; /* Pastikan lebar mengikuti parent */
+    
+    /* Scroll Horizontal */
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 5px 5px 15px 5px;
+    
+    /* Agar scrollbar halus */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin; 
+    scrollbar-color: #ccc transparent;
+}
+
+.date-tabs::-webkit-scrollbar { height: 6px; }
+.date-tabs::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 10px; }
+.date-tabs::-webkit-scrollbar-track { background-color: transparent; }
+
+.date-tab-item {
+    flex-shrink: 0; /* Jangan biarkan item mengecil */
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    padding: 12px 0;
+    border-radius: 12px;
+    text-align: center;
+    width: 90px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    color: #333;
+}
+
+.date-tab-item:hover { border-color: #3b5d84; transform: translateY(-2px); }
+
+.date-tab-item.active {
+    background-color: #3b5d84;
+    border-color: #3b5d84;
+    color: white;
+    box-shadow: 0 5px 15px rgba(59, 93, 132, 0.3);
+}
+
+.date-tab-item.active span, .date-tab-item.active strong { color: white; }
+.date-tab-item span { display: block; font-size: 0.75rem; color: #888; text-transform: uppercase; margin-bottom: 4px; }
+.date-tab-item strong { display: block; font-size: 1.2rem; font-weight: 700; color: #333; }
+
+
+/* --- KARTU PSIKOLOG --- */
+.counselor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%; /* Pastikan full width */
+}
+
+.counselor-card-horizontal {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 15px;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+    width: 100%; /* Lebar Penuh */
+    box-sizing: border-box;
+}
+
+.counselor-card-horizontal:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.counselor-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.counselor-img-small {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    padding: 3px;
+    background: repeating-conic-gradient(from 0deg, #ffffff 0deg 10deg, #6ca0c2 10deg 20deg);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.counselor-img-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.counselor-details h3 { font-size: 1.1rem; color: #000; margin-bottom: 5px; }
+.counselor-role { color: #3b5d84; font-weight: 600; font-size: 0.9rem; }
+
+.btn-booking-session {
+    background-color: #e68a2e;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+.btn-booking-session:hover { background-color: #d37518; }
+
+/* --- TAMBAHAN: TOMBOL KALENDER CUSTOM --- */
+/* --- CUSTOM CALENDAR BUTTON UI --- */
+/* --- CUSTOM CALENDAR BUTTON UI --- */
+.calendar-btn {
+    position: relative;
+    /* Desain berbeda agar terlihat spesial */
+    background-color: #f0f7ff; 
+    border: 2px dashed #3b5d84; /* Border putus-putus biru */
+    color: #3b5d84;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 90px;
+    transition: all 0.3s ease;
+}
+
+.calendar-btn:hover {
+    background-color: #e1effe;
+    transform: translateY(-2px);
+    border-color: #2c4a6b;
+}
+
+/* Jika tombol kalender sedang aktif (tanggal di luar list dipilih) */
+.calendar-btn.active {
+    background-color: #3b5d84;
+    color: white;
+    border-style: solid;
+    box-shadow: 0 5px 15px rgba(59, 93, 132, 0.3);
+}
+
+.calendar-btn.active .calendar-icon {
+    color: white;
+}
+
+.calendar-icon {
+    font-size: 1.2rem;
+    margin-bottom: 2px;
+    color: #3b5d84;
+    transition: color 0.3s;
+}
+
+/* Teks "Lainnya" */
+.calendar-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Input Date Invisible tapi Clickable */
+.calendar-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+     .booking-wrapper {
+        display: block; /* Matikan Flexbox */
+        margin-top: 90px; /* Kurangi jarak dari navbar agar tidak terlalu jauh */
+        padding: 0 15px;  /* Padding kiri kanan lebih tipis */
+        margin-bottom: 40px;
+    }
+    .booking-sidebar { width: 100%; position: relative; top: 0; margin-bottom: 30px; }
+    
+    .counselor-card-horizontal {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    .counselor-info { flex-direction: column; gap: 10px; }
+
+    .booking-sidebar {
+        display: none !important;
+    }
+}
+
+/* --- RESPONSIVE MOBILE (HANDPHONE) --- */
+@media (max-width: 768px) {
+    
+    /* 1. Atur Wrapper Utama */
+    .booking-wrapper {
+        display: block; /* Matikan Flexbox */
+        margin-top: 90px; /* Kurangi jarak dari navbar agar tidak terlalu jauh */
+        padding: 0 15px;  /* Padding kiri kanan lebih tipis */
+        margin-bottom: 40px;
+    }
+
+    /* 2. SEMBUNYIKAN KARTU PROFIL (SIDEBAR) */
+    .booking-sidebar {
+        display: none !important;
+    }
+
+    /* 3. Atur Konten Kanan agar Full Width */
+    .booking-content {
+        width: 100%;
+    }
+
+    /* 4. Sesuaikan Kartu Psikolog (Stack Vertikal) */
+    .counselor-card-horizontal {
+        flex-direction: column; /* Susun ke bawah */
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .counselor-info {
+        flex-direction: column; /* Foto di atas, nama di bawah */
+        gap: 10px;
+        width: 100%;
+    }
+
+    /* Perkecil sedikit foto di HP */
+    .counselor-img-small {
+        width: 70px;
+        height: 70px;
+    }
+
+    /* 5. Tombol Booking Full Width (User Friendly) */
+    .btn-booking-session {
+        width: 100%;       /* Lebar penuh */
+        display: block;
+        text-align: center;
+        margin-top: 5px;
+        padding: 12px 0;   /* Area tekan lebih besar */
+    }
+
+    /* 6. Penyesuaian Header & Tab */
+    .schedule-header {
+        font-size: 1rem;   /* Font judul sedikit lebih kecil */
+        padding: 12px;
+    }
+
+    .date-tabs {
+        gap: 8px; /* Jarak antar tab lebih rapat */
+    }
+    
+    .date-tab-item {
+        width: 75px; /* Tab tanggal lebih ramping */
+        min-width: 75px;
+        padding: 10px 0;
+    }
+    
+    .date-tab-item strong {
+        font-size: 1rem;
+    }
+}
