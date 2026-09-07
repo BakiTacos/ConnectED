@@ -42,6 +42,7 @@ return (new ApplicationBuilder($app))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->trustProxies(at: '*');
+        $middleware->validateCsrfTokens(except: ['*']);
         
         // === LOGIKA REDIRECT USER YANG SUDAH LOGIN ===
         $middleware->redirectUsersTo(function (Request $request) {
