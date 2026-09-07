@@ -56,7 +56,17 @@ foreach ($directories as $dir) {
     }
 }
 
-// 3. Copy pre-seeded SQLite database to /tmp
+// 3. Copy bootstrap cache files if present
+$sourceCacheDir = __DIR__ . '/../bootstrap/cache';
+if (is_dir($sourceCacheDir)) {
+    foreach (['packages.php', 'services.php'] as $cacheFile) {
+        if (file_exists("{$sourceCacheDir}/{$cacheFile}")) {
+            @copy("{$sourceCacheDir}/{$cacheFile}", "{$tmpStorage}/bootstrap/cache/{$cacheFile}");
+        }
+    }
+}
+
+// 4. Copy pre-seeded SQLite database to /tmp
 $sourceDb = __DIR__ . '/../database/database.sqlite';
 $targetDb = '/tmp/database.sqlite';
 
@@ -66,13 +76,15 @@ if (file_exists($sourceDb) && (!file_exists($targetDb) || filesize($targetDb) ==
     @touch($targetDb);
 }
 
-// 4. Force valid, non-empty environment variables
+// 5. Force valid, non-empty environment variables
 $defaults = [
     'APP_ENV' => 'production',
     'APP_DEBUG' => 'true',
     'APP_KEY' => 'base64:4dE1oZ2bUe58kMvF9Gv1P2m4x5y6z7A8b9c0d1e2f3g=',
     'APP_STORAGE' => $tmpStorage,
     'VIEW_COMPILED_PATH' => $tmpStorage . '/framework/views',
+    'APP_PACKAGES_CACHE' => "{$tmpStorage}/bootstrap/cache/packages.php",
+    'APP_SERVICES_CACHE' => "{$tmpStorage}/bootstrap/cache/services.php",
     'DB_CONNECTION' => 'sqlite',
     'DB_DATABASE' => $targetDb,
     'SESSION_DRIVER' => 'cookie',
@@ -95,7 +107,7 @@ foreach ($defaults as $k => $def) {
     $_SERVER[$k] = $val;
 }
 
-// 5. Forward request to Laravel public/index.php
+// 6. Forward request to Laravel public/index.php
 try {
     require __DIR__ . '/../public/index.php';
 } catch (\Throwable $e) {

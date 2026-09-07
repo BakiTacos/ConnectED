@@ -8,10 +8,24 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 $basePath = dirname(__DIR__);
+$storagePath = getenv('APP_STORAGE') ?: ($_ENV['APP_STORAGE'] ?? null);
+
+if ($storagePath) {
+    $bootstrapCache = $storagePath . '/bootstrap/cache';
+    if (!is_dir($bootstrapCache)) {
+        @mkdir($bootstrapCache, 0755, true);
+    }
+    
+    putenv("APP_PACKAGES_CACHE={$bootstrapCache}/packages.php");
+    putenv("APP_SERVICES_CACHE={$bootstrapCache}/services.php");
+    $_ENV['APP_PACKAGES_CACHE'] = "{$bootstrapCache}/packages.php";
+    $_ENV['APP_SERVICES_CACHE'] = "{$bootstrapCache}/services.php";
+    $_SERVER['APP_PACKAGES_CACHE'] = "{$bootstrapCache}/packages.php";
+    $_SERVER['APP_SERVICES_CACHE'] = "{$bootstrapCache}/services.php";
+}
+
 $app = new Application($basePath);
 
-// Set storage path to /tmp/storage early if running on Vercel / serverless
-$storagePath = getenv('APP_STORAGE') ?: ($_ENV['APP_STORAGE'] ?? null);
 if ($storagePath) {
     $app->useStoragePath($storagePath);
 }
