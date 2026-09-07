@@ -1,12 +1,26 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\ApplicationBuilder;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-$app = Application::configure(basePath: dirname(__DIR__))
+$basePath = dirname(__DIR__);
+$app = new Application($basePath);
+
+// Set storage path to /tmp/storage early if running on Vercel / serverless
+$storagePath = getenv('APP_STORAGE') ?: ($_ENV['APP_STORAGE'] ?? null);
+if ($storagePath) {
+    $app->useStoragePath($storagePath);
+}
+
+return (new ApplicationBuilder($app))
+    ->withKernels()
+    ->withEvents()
+    ->withCommands()
+    ->withProviders()
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
@@ -15,9 +29,6 @@ $app = Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         
         // === LOGIKA REDIRECT USER YANG SUDAH LOGIN ===
-        // Jika user yang sudah login mencoba buka halaman /login, 
-        // mereka akan dilempar kesini:
-        
         $middleware->redirectUsersTo(function (Request $request) {
             $user = Auth::user();
 
@@ -34,10 +45,3 @@ $app = Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
-
-$storagePath = getenv('APP_STORAGE') ?: ($_ENV['APP_STORAGE'] ?? null);
-if ($storagePath) {
-    $app->useStoragePath($storagePath);
-}
-
-return $app;
