@@ -29,6 +29,8 @@
     "LOG_CHANNEL": "stderr",
     "DB_CONNECTION": "sqlite",
     "APP_MAINTENANCE_DRIVER": "file",
-    "MAIL_MAILER": "log"
+    "MAIL_MAILER": "log",
+    "HASH_DRIVER": "bcrypt",
+    "BCRYPT_ROUNDS": "12"
   }
 }

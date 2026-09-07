@@ -98,6 +98,8 @@ $defaults = [
     'MAIL_MAILER' => 'log',
     'BROADCAST_CONNECTION' => 'log',
     'FILESYSTEM_DISK' => 'local',
+    'HASH_DRIVER' => 'bcrypt',
+    'BCRYPT_ROUNDS' => '12',
 ];
 
 foreach ($defaults as $k => $def) {
