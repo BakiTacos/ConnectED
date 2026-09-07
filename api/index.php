@@ -56,17 +56,36 @@ foreach ($directories as $dir) {
     }
 }
 
-// 3. Copy bootstrap cache files if present
+// 3. Register autoloader early so we can check class_exists
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// 4. Copy and sanitize bootstrap cache files (filter out missing dev packages)
 $sourceCacheDir = __DIR__ . '/../bootstrap/cache';
-if (is_dir($sourceCacheDir)) {
-    foreach (['packages.php', 'services.php'] as $cacheFile) {
-        if (file_exists("{$sourceCacheDir}/{$cacheFile}")) {
-            @copy("{$sourceCacheDir}/{$cacheFile}", "{$tmpStorage}/bootstrap/cache/{$cacheFile}");
+if (file_exists("{$sourceCacheDir}/packages.php")) {
+    $packages = require "{$sourceCacheDir}/packages.php";
+    $filtered = [];
+    foreach ($packages as $pkg => $data) {
+        $validProviders = [];
+        foreach ($data['providers'] ?? [] as $prov) {
+            if (class_exists($prov)) {
+                $validProviders[] = $prov;
+            }
+        }
+        if (!empty($validProviders)) {
+            $data['providers'] = $validProviders;
+            $filtered[$pkg] = $data;
         }
     }
+    @file_put_contents("{$tmpStorage}/bootstrap/cache/packages.php", "<?php return " . var_export($filtered, true) . ";");
+} else {
+    @file_put_contents("{$tmpStorage}/bootstrap/cache/packages.php", "<?php return [];");
 }
 
-// 4. Copy pre-seeded SQLite database to /tmp
+if (file_exists("{$sourceCacheDir}/services.php")) {
+    @copy("{$sourceCacheDir}/services.php", "{$tmpStorage}/bootstrap/cache/services.php");
+}
+
+// 5. Copy pre-seeded SQLite database to /tmp
 $sourceDb = __DIR__ . '/../database/database.sqlite';
 $targetDb = '/tmp/database.sqlite';
 
@@ -76,7 +95,7 @@ if (file_exists($sourceDb) && (!file_exists($targetDb) || filesize($targetDb) ==
     @touch($targetDb);
 }
 
-// 5. Force valid, non-empty environment variables
+// 6. Force valid, non-empty environment variables
 $defaults = [
     'APP_ENV' => 'production',
     'APP_DEBUG' => 'true',
@@ -107,7 +126,7 @@ foreach ($defaults as $k => $def) {
     $_SERVER[$k] = $val;
 }
 
-// 6. Forward request to Laravel public/index.php
+// 7. Forward request to Laravel public/index.php
 try {
     require __DIR__ . '/../public/index.php';
 } catch (\Throwable $e) {
