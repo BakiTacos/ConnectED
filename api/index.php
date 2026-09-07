@@ -66,11 +66,11 @@ if (file_exists($sourceDb) && (!file_exists($targetDb) || filesize($targetDb) ==
     @touch($targetDb);
 }
 
-// 4. Set environment variables for serverless runtime
-$envVars = [
+// 4. Force valid, non-empty environment variables
+$defaults = [
     'APP_ENV' => 'production',
     'APP_DEBUG' => 'true',
-    'APP_KEY' => getenv('APP_KEY') ?: ($_ENV['APP_KEY'] ?? 'base64:4dE1oZ2bUe58kMvF9Gv1P2m4x5y6z7A8b9c0d1e2f3g='),
+    'APP_KEY' => 'base64:4dE1oZ2bUe58kMvF9Gv1P2m4x5y6z7A8b9c0d1e2f3g=',
     'APP_STORAGE' => $tmpStorage,
     'VIEW_COMPILED_PATH' => $tmpStorage . '/framework/views',
     'DB_CONNECTION' => 'sqlite',
@@ -78,14 +78,21 @@ $envVars = [
     'SESSION_DRIVER' => 'cookie',
     'CACHE_STORE' => 'array',
     'LOG_CHANNEL' => 'stderr',
-    'APP_SERVICES_CACHE' => $tmpStorage . '/bootstrap/cache/services.php',
-    'APP_PACKAGES_CACHE' => $tmpStorage . '/bootstrap/cache/packages.php',
+    'QUEUE_CONNECTION' => 'sync',
+    'AUTH_GUARD' => 'web',
 ];
 
-foreach ($envVars as $key => $val) {
-    putenv("{$key}={$val}");
-    $_ENV[$key] = $val;
-    $_SERVER[$key] = $val;
+foreach ($defaults as $k => $def) {
+    $val = getenv($k);
+    if ($val === false || $val === '' || $val === null) {
+        $val = $_ENV[$k] ?? ($_SERVER[$k] ?? null);
+    }
+    if ($val === false || $val === '' || $val === null) {
+        $val = $def;
+    }
+    putenv("{$k}={$val}");
+    $_ENV[$k] = $val;
+    $_SERVER[$k] = $val;
 }
 
 // 5. Forward request to Laravel public/index.php
