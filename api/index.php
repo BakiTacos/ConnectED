@@ -13,6 +13,18 @@ if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
     $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
 }
 
+// Clean up stale cookies from previous cookie driver to keep header size small
+if (!empty($_SERVER['HTTP_COOKIE'])) {
+    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+    foreach ($cookies as $cookie) {
+        $parts = explode('=', trim($cookie), 2);
+        $name = trim($parts[0] ?? '');
+        if (strlen($name) >= 35 && $name !== 'connected-session' && $name !== 'connected_session' && $name !== 'XSRF-TOKEN') {
+            header("Set-Cookie: {$name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Max-Age=0; Secure; SameSite=Lax", false);
+        }
+    }
+}
+
 // 1. Static Asset Handler for PHP built-in server on Vercel
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH));
 $publicFile = __DIR__ . '/../public' . $uri;
@@ -86,7 +98,7 @@ $defaults = [
     'APP_SERVICES_CACHE' => "{$tmpStorage}/bootstrap/cache/services.php",
     'DB_CONNECTION' => 'sqlite',
     'DB_DATABASE' => $targetDb,
-    'SESSION_DRIVER' => 'cookie',
+    'SESSION_DRIVER' => 'file',
     'SESSION_SECURE_COOKIE' => 'true',
     'SESSION_SAME_SITE' => 'lax',
     'CACHE_STORE' => 'array',
