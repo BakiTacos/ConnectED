@@ -1,59 +1,78 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🧠 ConnectED - Platform Konseling Mahasiswa
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+ConnectED adalah platform layanan konseling dan kesehatan mental mahasiswa berbasis web. Codebase ini sudah dikonfigurasi **self-contained (tanpa perlu install/koneksi MySQL database server)** menggunakan SQLite dan **siap dideploy ke Vercel (Serverless PHP)**.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🔑 Informasi Akun Login (Demo Credentials)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Semua akun sudah tersedia di database lokal (`database/database.sqlite`) dengan password yang sama:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Role | Email | Password | Akses Halaman |
+| :--- | :--- | :--- | :--- |
+| 🎓 **Mahasiswa (Student)** | `michael@student.umn.ac.id` | `password123` | Booking Konseling, Riwayat Jadwal, Profil & Settings |
+| 🛡️ **Admin** | `admin@umn.ac.id` | `password123` | Admin Dashboard, List Booking, Kelola Jadwal, Master Data |
+| 🧠 **Psikolog (Yanuar)** | `yanuar@umn.ac.id` | `password123` | Dashboard Psikolog, Jadwal Kalender, Sesi Konseling |
+| 🧠 **Psikolog (Fiona)** | `fiona@umn.ac.id` | `password123` | Dashboard Psikolog, Sesi Konseling |
+| 🧠 **Psikolog (Sonny)** | `sonny@umn.ac.id` | `password123` | Dashboard Psikolog, Sesi Konseling |
+| 🧠 **Psikolog (Ria)** | `ria@umn.ac.id` | `password123` | Dashboard Psikolog, Sesi Konseling |
 
-## Learning Laravel
+> 💡 **Fitur Tambahan:** Pada halaman login (`/login`), terdapat panel **Info Akun Demo** dengan tombol **"Pakai Ini" (1-Click Auto Fill)** untuk mengisi email & password secara instan.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Menjalankan Secara Lokal (Local Development)
 
-## Laravel Sponsors
+Aplikasi ini tidak memerlukan instalasi MySQL atau setup database terpisah.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 1. Salin Environment File
+```bash
+cp .env.example .env
+```
 
-### Premium Partners
+### 2. Generate Application Key (Jika Belum Ada)
+```bash
+php artisan key:generate
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 3. (Opsional) Reset / Re-seed Database
+Database `database/database.sqlite` sudah terisi data bawaan. Jika ingin me-reset ulang data:
+```bash
+php artisan migrate:fresh --seed
+```
 
-## Contributing
+### 4. Jalankan Server
+```bash
+php artisan serve
+```
+Buka browser di `http://localhost:8000`.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## ☁️ Cara Deploy ke Vercel
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Codebase ini sudah dilengkapi dengan:
+- `vercel.json` (Konfigurasi Serverless Runtime `vercel-php`)
+- `api/index.php` (Handler Serverless & Auto Storage Initialization di `/tmp`)
+- `.vercelignore` (Mengabaikan file yang tidak dibutuhkan saat deploy)
 
-## Security Vulnerabilities
+### Langkah 1: Push ke GitHub
+Pastikan semua file (termasuk `database/database.sqlite`, `vercel.json`, `api/index.php`) sudah di-commit dan di-push ke repository GitHub Anda:
+```bash
+git add .
+git commit -m "feat: setup self-contained sqlite and vercel deployment"
+git push origin main
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Langkah 2: Import Project di Vercel
+1. Buka [Vercel Dashboard](https://vercel.com/new).
+2. Pilih repository GitHub **ConnectED**.
+3. Pada bagian **Environment Variables**, tambahkan:
+   - `APP_KEY`: `base64:4dE1oZ2bUe58kMvF9Gv1P2m4x5y6z7A8b9c0d1e2f3g=` (atau generate key baru via `php artisan key:generate --show`)
+   - `APP_ENV`: `production`
+   - `APP_DEBUG`: `false`
+   - `DB_CONNECTION`: `sqlite`
+   - `SESSION_DRIVER`: `cookie`
+4. Klik **Deploy**.
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Selesai! Aplikasi Anda akan langsung online dan berfungsi penuh di Vercel tanpa perlu database server eksternal.

@@ -34,7 +34,19 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => (function () {
+                $db = env('DB_DATABASE');
+                if (empty($db) || $db === 'connected_db' || $db === 'laravel') {
+                    return database_path('database.sqlite');
+                }
+                if ($db === ':memory:') {
+                    return ':memory:';
+                }
+                if (str_starts_with($db, '/') || str_starts_with($db, '\\') || preg_match('/^[a-zA-Z]:[\\\\\/]/', $db)) {
+                    return $db;
+                }
+                return base_path($db);
+            })(),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
             'busy_timeout' => null,

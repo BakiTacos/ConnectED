@@ -1,0 +1,8 @@
+.git
+.github
+tests
+phpunit.xml
+.editorconfig
+connected_db (2).sql
+node_modules
+.env
